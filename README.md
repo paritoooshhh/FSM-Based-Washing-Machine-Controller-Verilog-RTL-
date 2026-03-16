@@ -1,232 +1,273 @@
-# Automatic Washing Machine Controller using Verilog HDL
+# Washing Machine Controller (RTL Design)
 
-Verilog RTL implementation of a **Finite State Machine (FSM) based washing machine controller** simulating wash, rinse, drain, and spin cycles.
+A modular **Finite State Machine (FSM) based washing machine controller** implemented in **Verilog HDL**.
+This project models the control logic of a modern washing machine supporting multiple washing modes and timer-based state transitions.
 
----
-
-# Washing Machine Controller (Verilog RTL)
-
-## Overview
-
-This project implements a **digital controller for a fully automatic washing machine using Verilog HDL**.
-
-The system models the behavior of a real washing machine by controlling the washing cycle through a **Finite State Machine (FSM) architecture**.
-
-The controller manages different stages of the washing process including:
-
-- Water filling  
-- Washing  
-- Draining  
-- Rinsing  
-- Spinning  
-
-The design focuses on **digital system design, FSM modeling, modular RTL development, and hardware simulation**.
+The design follows a **hardware architecture approach**, separating the FSM, timer logic, mode control, and actuator outputs into independent modules.
 
 ---
 
-# Project Objectives
+# Project Overview
 
-- Design a **digital appliance controller using Verilog HDL**
-- Implement **finite state machine based control logic**
-- Simulate washing machine operation using hardware signals
-- Develop **modular and scalable RTL architecture**
-- Extend the design with **advanced features in future versions**
+Modern washing machines operate through a sequence of stages such as filling water, washing, draining, rinsing, and spinning.
+This project models that behaviour using a **finite state machine with timer-driven transitions**.
 
----
+The controller activates different mechanical components (actuators) such as:
 
-# System Architecture
+* Water inlet valve
+* Drum motor (wash mode)
+* Drum motor (spin mode)
+* Drain pump
+* Door lock
+* Buzzer
 
-**The washing machine controller is divided into several modules:**
-washing_machine_controller
-
-│
-
-├── control_fsm
-
-├── timer_unit
-
-├── mode_selector
-
-├── motor_controller
-
-├── water_valve_controller
-
-├── drain_controller
-
-└── sensor_interface
-
+Each washing **mode** determines which states are executed and how long each stage runs.
 
 ---
 
-# Washing Cycle Flow
+# Controller Architecture
 
-The controller follows a standard washing sequence:
+The controller is organized into modular RTL blocks.
 
+```
+                    +----------------------+
+mode_select  -----> |   MODE CONTROLLER    |
+                    +----------+-----------+
+                               |
+                               v
+                    +----------------------+
+                    |   TIMER LOOKUP       |
+                    | (mode + state)       |
+                    +----------+-----------+
+                               |
+                               v
+                    +----------------------+
+                    |    TIMER COUNTER     |
+                    +----------+-----------+
+                               |
+                         timer_done
+                               |
+                               v
+                    +----------------------+
+                    |     WASHING FSM      |
+                    +----------+-----------+
+                               |
+                               v
+                    +----------------------+
+                    |   ACTUATOR CONTROL   |
+                    +----------------------+
+```
+
+---
+
+# FSM States (V1)
+
+The washing cycle is implemented using the following states:
+
+```
 IDLE
-
-↓
-
-FILL_WATER
-
-↓
-
+FILL
+PRESOAK
 WASH
-
-↓
-
 DRAIN
-
-↓
-
-RINSE
-
-↓
-
+RINSE1
 SPIN
-
-↓
-
 DONE
+```
 
+Base washing flow:
 
-Each stage activates specific outputs such as the **motor, water valve, or drain pump**.
+```
+IDLE → FILL → PRESOAK → WASH → DRAIN → RINSE1 → SPIN → DONE
+```
 
----
-
-# Inputs
-
-| Signal | Description |
-|------|-------------|
-| clk | System clock |
-| reset | Reset controller |
-| start | Start washing cycle |
-| mode | Washing mode selection |
-| lid_open | Safety lid sensor |
-| water_level | Water level sensor |
+Depending on the selected washing **mode**, certain states may be skipped.
 
 ---
 
-# Outputs
+# Actuator Signals
 
-| Signal | Description |
-|------|-------------|
-| motor | Motor control signal |
-| water_valve | Water inlet control |
-| drain_pump | Drain water control |
-| buzzer | Cycle completion indicator |
+The controller drives the following actuator outputs.
+
+| Signal      | Description                    |
+| ----------- | ------------------------------ |
+| water_valve | Controls water inlet           |
+| motor_wash  | Slow drum rotation for washing |
+| motor_spin  | High speed rotation for drying |
+| drain_pump  | Removes dirty water            |
+| door_lock   | Locks door during cycle        |
+| buzzer      | Signals cycle completion       |
 
 ---
 
-# FSM Design
+# Supported Washing Modes
 
-The washing machine controller is implemented using a **Moore Finite State Machine**.
+The controller models **11 washing modes** inspired by real washing machine panels.
 
-| State | Function |
-|------|----------|
-| IDLE | Wait for start command |
-| FILL_WATER | Fill washing drum with water |
-| WASH | Rotate drum for washing |
-| DRAIN | Remove dirty water |
-| RINSE | Clean water rinse cycle |
-| SPIN | High speed spinning |
-| DONE | End of washing cycle |
+```
+NORMAL
+SUPER_CLEAN
+QUICK_WASH
+DELICATES
+BEDSHEET
+JEANS
+DRAIN_SPIN
+RINSE_SPIN
+TUB_CLEAN
+ECO_TUB_CLEAN
+PRESOAK_WASH
+```
+
+Each mode modifies:
+
+* State sequence
+* State duration
+
+---
+
+# Version 1 (V1)
+
+V1 implements the **core washing machine controller**.
+
+## Features
+
+* FSM based washing cycle controller
+* Timer-driven state transitions
+* Multiple washing modes
+* Modular RTL architecture
+* Separate actuator control logic
+* Time remaining counter
+* Simulation and waveform verification
+
+## Supported States
+
+```
+IDLE
+FILL
+PRESOAK
+WASH
+DRAIN
+RINSE1
+SPIN
+DONE
+```
+
+## Example Mode Flow
+
+Normal mode:
+
+```
+FILL → WASH → DRAIN → RINSE1 → SPIN
+```
+
+Super Clean mode:
+
+```
+FILL → PRESOAK → WASH → DRAIN → RINSE1 → SPIN
+```
+
+Drain + Spin mode:
+
+```
+DRAIN → SPIN
+```
+
+---
+
+# Version 2 (V2) – Future Upgrade
+
+Version 2 will expand the design to model **more realistic appliance behaviour**.
+
+## Planned Improvements
+
+### Multiple Rinse Cycles
+
+Real washing machines may perform up to **8 rinse cycles**.
+
+```
+RINSE1 → DRAIN → RINSE2 → DRAIN → ... → RINSE8
+```
+
+### Advanced Timer Control
+
+* Configurable cycle durations
+* Dynamic timer loading
+
+### Sensor Integration
+
+Possible additions:
+
+* Water level sensor
+* Door safety sensor
+* Load detection
+
+### Display System
+
+* Time remaining counter
+* Mode display logic
+* 7-segment display interface
+
+### Enhanced Modes
+
+More accurate behaviour for:
+
+* Eco modes
+* Heavy fabric cycles
+* Delicate fabric handling
+
+---
+
+# Repository Structure
+
+```
+washing-machine-controller/
+
+rtl/
+    washing_fsm.v
+    timer_counter.v
+    mode_controller.v
+    actuator_control.v
+    top_controller.v
+
+tb/
+    washing_machine_tb.v
+
+sim/
+    simulation scripts
+
+docs/
+    architecture.md
+```
 
 ---
 
 # Simulation
 
-Simulation can be performed using:
+The design can be simulated using:
 
-- **Icarus Verilog**
-- **GTKWave**
-washing-machine-controller-verilog
+* Icarus Verilog
+* ModelSim
+* Vivado Simulator
 
-## Version Roadmap
-
-### V1 — Basic Washing Machine Controller
-
-The first version implements the **core washing cycle logic**.
-
-#### Features
-- FSM based washing cycle controller
-- Basic washing stages:
-  - Fill Water
-  - Wash
-  - Drain
-  - Rinse
-  - Spin
-  - Done
-- Single washing mode (**Normal Mode**)
-- Timer based cycle control
-- Modular RTL implementation
-- Simulation and waveform verification
+Waveforms can be viewed using **GTKWave**.
 
 ---
 
-### V2 — Advanced Appliance Controller
+# Learning Goals
 
-Future versions will expand the system to support **realistic washing machine features inspired by commercial appliances**.
+This project demonstrates key digital design concepts:
 
-#### Planned Features
-
-##### Multiple Washing Modes
-- Normal
-- Quick Wash
-- Delicates
-- Jeans
-- Energy Saving
-- Rinse + Spin
-- Eco Tub Clean
-
-##### Adjustable Parameters
-- Water Level Selection
-- Wash Time Control
-- Rinse Cycle Selection
-- Spin Time Adjustment
-
-##### User Controls
-- Start / Pause
-- Cycle Selection
-- Delay End Timer
-
-##### Safety Features
-- Lid open detection
-- Water level monitoring
-- Automatic cycle interruption
-
-##### Interface Improvements
-- Seven segment display driver
-- LED indicators for wash stages
-- Mode indicators
+* Finite State Machine design
+* Modular RTL architecture
+* Timer driven control systems
+* Hardware control of mechanical actuators
+* Verilog testbench development
 
 ---
 
-## Future Improvements
+# Author
 
-Possible future extensions include:
-
-- FPGA implementation
-- PWM based motor control
-- Sensor based automatic water level detection
-- RTL to GDSII physical design flow using OpenLane
-- Integration with a RISC-V based controller architecture
+Paritosh Tanneru
+ECE – IIIT Kottayam
 
 ---
-
-## Learning Outcomes
-
-This project demonstrates:
-
-- FSM design in Verilog
-- Synchronous digital system design
-- Modular RTL architecture
-- Hardware simulation and verification
-- Digital control system implementation
-
----
-
-## Author
-
-**Paritosh Tanneru**  
-B.Tech Electronics and Communication Engineering  
-IIIT Kottayam
