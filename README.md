@@ -244,10 +244,7 @@ docs/
 # Simulation
 
 The design can be simulated using:
-
-* Icarus Verilog
 * ModelSim
-* Vivado Simulator
 
 Waveforms can be viewed using **GTKWave**.
 
