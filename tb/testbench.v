@@ -92,7 +92,7 @@ end
 
 initial begin
     $monitor("Time=%0t | mode=%0d | state=%0d | time_left=%0d | valve=%b wash=%b spin=%b drain=%b lock=%b buzzer=%b",
-        $time, mode, uut.fsm_instantiation.state, time_remaining,
+        $time, mode, uut.fsm_inst.state, time_remaining,
         water_valve, motor_wash, motor_spin, drain_pump, door_lock, buzzer);
 end
 
