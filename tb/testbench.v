@@ -45,28 +45,37 @@ initial begin
     reset = 0;
 
     $display("---- NORMAL MODE ----");
+    reset = 1;
+    #10;
+    reset = 0;
+    
     mode = 4'd0;  // NORMAL
     start = 1;
+    #10;
+    start = 0;
 
-    #20;
+    #500;
+
+    $display("---- QUICK WASH ----");
+    reset = 1;
+    #10;
+    reset = 0
+    
+    mode = 4'd1;  // QUICK
+    start = 1;
+    #10;
     start = 0;
 
     #400;
 
-    $display("---- QUICK WASH ----");
-    mode = 4'd1;  // QUICK
-    start = 1;
-
-    #20;
-    start = 0;
-
-    #300;
-
     $display("---- DRAIN SPIN ----");
+    reset = 1;
+    #10;
+    reset = 0
+    
     mode = 4'd6;
     start = 1;
-
-    #20;
+    #10;
     start = 0;
 
     #200;
