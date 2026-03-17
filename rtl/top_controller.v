@@ -16,6 +16,7 @@ module top_controller(
 );
 
 wire [2:0] state;
+wire [2:0] next_state;
 wire load_timer;
 wire enable_timer;
 wire timer_done;
@@ -30,17 +31,18 @@ washing_fsm fsm_inst(
     .timer_done(timer_done),
 
     .state(state),
+    .next_state_out(next_state),
     .load_timer(load_timer),
     .enable_timer(enable_timer)
 );
 
-mode_timer_lookup lookup_instantiation(
+mode_timer_lookup lookup_inst(
     .mode(mode),
-    .state(state),
+    .state(next_state),  
     .time_value(load_value)
 );
 
-timer_counter timer_instantiation(
+timer_counter timer_inst(
     .clk(clk),
     .reset(reset),
     .load(load_timer),
@@ -51,7 +53,7 @@ timer_counter timer_instantiation(
     .timer_done(timer_done)
 );
 
-actuator_control act_instantiation(
+actuator_control act_inst(
     .state(state),
 
     .water_valve(water_valve),

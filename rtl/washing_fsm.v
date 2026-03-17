@@ -8,6 +8,7 @@ module washing_fsm(
     input timer_done,
 
     output reg [2:0] state,
+    output reg [2:0] next_state_out,
     output reg load_timer,
     output reg enable_timer
 );
@@ -100,10 +101,12 @@ always @(*) begin
         end
 
         DONE: begin
-            next_state = IDLE; 
+            next_state = IDLE;
         end
 
     endcase
+
+    next_state_out = next_state;
 
 end
 
