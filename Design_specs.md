@@ -32,13 +32,9 @@ SPIN
 DONE
 ```
 
-### Base Flow
+<img width="1123" height="769" alt="image" src="https://github.com/user-attachments/assets/ff2582e1-f4a9-46a1-94af-6359795d4228" />
 
-```text
-IDLE → FILL → PRESOAK → WASH → DRAIN → RINSE1 → SPIN → DONE → IDLE
-```
-
-Modes selectively skip states.
+Complete Moore machine Specification
 
 ---
 
