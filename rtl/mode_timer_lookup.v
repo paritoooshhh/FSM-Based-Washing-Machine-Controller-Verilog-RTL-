@@ -42,6 +42,8 @@ always @(*) begin
                 DRAIN:  time_value = 4;
                 RINSE1: time_value = 10;
                 SPIN:   time_value = 12;
+
+                default: time_value = 10'd0;
             endcase
         end
 
@@ -52,6 +54,8 @@ always @(*) begin
                 DRAIN:  time_value = 4;
                 RINSE1: time_value = 6;
                 SPIN:   time_value = 8;
+
+                default: time_value = 10'd0;
             endcase
         end
 
@@ -63,6 +67,8 @@ always @(*) begin
                 DRAIN:   time_value = 6;
                 RINSE1:  time_value = 14;
                 SPIN:    time_value = 16;
+
+                default: time_value = 10'd0;
             endcase
         end
 
@@ -73,6 +79,8 @@ always @(*) begin
                 DRAIN:  time_value = 4;
                 RINSE1: time_value = 8;
                 SPIN:   time_value = 5;
+
+                default: time_value = 10'd0;
             endcase
         end
 
@@ -84,6 +92,8 @@ always @(*) begin
                 DRAIN:   time_value = 6;
                 RINSE1:  time_value = 12;
                 SPIN:    time_value = 12;
+
+                default: time_value = 10'd0;
             endcase
         end
   
@@ -95,6 +105,8 @@ always @(*) begin
                 DRAIN:   time_value = 6;
                 RINSE1:  time_value = 12;
                 SPIN:    time_value = 14;
+
+                default: time_value = 10'd0;
             endcase
         end
 
@@ -102,6 +114,8 @@ always @(*) begin
             case(state)
                 DRAIN: time_value = 6;
                 SPIN:  time_value = 10;
+
+                default: time_value = 10'd0;
             endcase
         end
 
@@ -110,6 +124,8 @@ always @(*) begin
                 FILL:   time_value = 8;
                 RINSE1: time_value = 10;
                 SPIN:   time_value = 10;
+
+                default: time_value = 10'd0;
             endcase
         end
 
@@ -120,6 +136,8 @@ always @(*) begin
                 DRAIN:  time_value = 6;
                 RINSE1: time_value = 12;
                 SPIN:   time_value = 10;
+
+                default: time_value = 10'd0;
             endcase
         end
 
@@ -128,6 +146,8 @@ always @(*) begin
                 FILL:  time_value = 10;
                 WASH:  time_value = 50;
                 DRAIN: time_value = 6;
+
+                default: time_value = 10'd0;
             endcase
         end
 
@@ -139,6 +159,8 @@ always @(*) begin
                 DRAIN:   time_value = 6;
                 RINSE1:  time_value = 10;
                 SPIN:    time_value = 10;
+
+                default: time_value = 10'd0;
             endcase
         end
 

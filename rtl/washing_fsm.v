@@ -101,7 +101,10 @@ always @(*) begin
         end
 
         DONE: begin
-            next_state = IDLE;
+            if(start)
+                next_state = FILL;
+            else
+                next_state = DONE;
         end
 
     endcase
