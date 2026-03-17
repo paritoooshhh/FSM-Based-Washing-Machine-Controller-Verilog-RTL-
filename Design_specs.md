@@ -215,7 +215,3 @@ rtl/
 * Sensor integration (water level, door)
 * Pause/resume support
 * Display system (7-segment / LCD)
-
----
-
----
