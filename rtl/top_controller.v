@@ -38,7 +38,7 @@ washing_fsm fsm_inst(
 
 mode_timer_lookup lookup_inst(
     .mode(mode),
-    .state(next_state),  
+    .state(state),  
     .time_value(load_value)
 );
 
