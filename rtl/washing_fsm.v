@@ -35,6 +35,16 @@ parameter PRESOAK_WASH  = 4'd10;
 
 reg [2:0] next_state;
 
+reg start_d;
+always @(posedge clk or posedge reset) begin
+    if (reset)
+        start_d <= 0;
+    else
+        start_d <= start;
+end
+
+wire start_pulse = start & ~start_d;
+
 always @(posedge clk or posedge reset) begin
     if (reset)
         state <= IDLE;
@@ -49,7 +59,7 @@ always @(*) begin
     case(state)
 
         IDLE: begin
-            if (start) begin
+            if (start_pulse) begin
                 if (mode == DRAIN_SPIN)
                     next_state = DRAIN;
                 else if (mode == RINSE_SPIN)
@@ -99,12 +109,18 @@ always @(*) begin
                 next_state = DONE;
         end
 
-        DONE: begin
-            if(start)
-                next_state = FILL;
-            else
-                next_state = DONE;
+        DONE : begin
+            if(start_pulse) begin
+                if(mode == DRAIN_SPIN)
+                    next_state = DRAIN;
+                else if(mode == RINSE_SPIN)
+                    next_state = RINSE1;
+                else
+                    next_state = FILL;
+            end
         end
+
+        default: next_state = IDLE;
 
     endcase
 
@@ -112,14 +128,8 @@ end
 
 always @(*) begin
 
-    load_timer = 0;
+    load_timer   = (state != next_state);
     enable_timer = (state != IDLE) && !pause;
-
-    if (state != next_state)
-        load_timer = 1;
-
-    if (pause)
-        enable_timer = 0;
 
 end
 
