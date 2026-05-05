@@ -38,12 +38,7 @@ always @(*) begin
         door_lock = 1;
     end
 
-    else if (state == PRESOAK) begin
-        motor_wash = 1;
-        door_lock = 1;
-    end
-
-    else if (state == WASH) begin
+    else if (state == PRESOAK || state == WASH) begin
         motor_wash = 1;
         door_lock = 1;
     end
