@@ -98,11 +98,11 @@ rtl/
     actuator_control.v
     top_controller.v
 
-tb/
+Testbench/
     testbench.v
 
 README.md
-design_spec.md
+Design_spec.md
 ```
 
 ---
@@ -148,6 +148,6 @@ ECE 4th semester — IIIT Kottayam
 
 For detailed design specifications, timing tables, and state diagrams, refer to:
 
- `design_spec.md`
+ `Design_spec.md`
 
 ---
