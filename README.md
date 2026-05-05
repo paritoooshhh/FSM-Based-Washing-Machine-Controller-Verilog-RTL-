@@ -148,6 +148,6 @@ ECE 4th semester — IIIT Kottayam
 
 For detailed design specifications, timing tables, and state diagrams, refer to:
 
- `Design_spec.md`
+ `Design_specs.md`
 
 ---
