@@ -115,7 +115,7 @@ always @(*) begin
     load_timer = 0;
     enable_timer = 1;
 
-    if (timer_done)
+    if (state != next_state)
         load_timer = 1;
 
     if (pause)
