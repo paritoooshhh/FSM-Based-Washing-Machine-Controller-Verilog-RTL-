@@ -28,41 +28,53 @@ always @(*) begin
     door_lock   = 0;
     buzzer      = 0;
 
-    if (state == IDLE) begin
-        door_lock = 0;
-        buzzer = 0;
-    end
+    case (state)
 
-    else if (state == FILL) begin
-        water_valve = 1;
-        door_lock = 1;
-    end
+        IDLE: begin
+        end
 
-    else if (state == PRESOAK || state == WASH) begin
-        motor_wash = 1;
-        door_lock = 1;
-    end
+        FILL: begin
+            water_valve = 1;
+            door_lock   = 1;
+        end
 
-    else if (state == DRAIN) begin
-        drain_pump = 1;
-        door_lock = 1;
-    end
+        PRESOAK,
+        WASH: begin
+            motor_wash = 1;
+            door_lock  = 1;
+        end
 
-    else if (state == RINSE1) begin
-        water_valve = 1;
-        motor_wash = 1;
-        door_lock = 1;
-    end
+        DRAIN: begin
+            drain_pump = 1;
+            door_lock  = 1;
+        end
 
-    else if (state == SPIN) begin
-        motor_spin = 1;
-        door_lock = 1;
-    end
+        RINSE1: begin
+            water_valve = 1;
+            motor_wash  = 1;
+            door_lock   = 1;
+        end
 
-    else if (state == DONE) begin
-        buzzer = 1;
-        door_lock = 0;
-    end
+        SPIN: begin
+            motor_spin = 1;
+            door_lock  = 1;
+        end
+
+        DONE: begin
+            buzzer    = 1;
+            door_lock = 0;
+        end
+
+        default: begin
+            water_valve = 0;
+            motor_wash  = 0;
+            motor_spin  = 0;
+            drain_pump  = 0;
+            door_lock   = 0;
+            buzzer      = 0;
+        end
+
+    endcase
 
 end
 
