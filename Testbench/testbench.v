@@ -33,14 +33,32 @@ top_controller dut(
     .buzzer(buzzer)
 );
 
-// Clock generation
+// CLOCK (10ns period)
 always #5 clk = ~clk;
 
-// Smooth monitoring
+// -------- STATE NAME FUNCTION --------
+function [8*10:1] get_state_name;
+    input [2:0] state;
+    begin
+        case(state)
+            3'd0: get_state_name = "IDLE";
+            3'd1: get_state_name = "FILL";
+            3'd2: get_state_name = "PRESOAK";
+            3'd3: get_state_name = "WASH";
+            3'd4: get_state_name = "DRAIN";
+            3'd5: get_state_name = "RINSE1";
+            3'd6: get_state_name = "SPIN";
+            3'd7: get_state_name = "DONE";
+            default: get_state_name = "UNKNOWN";
+        endcase
+    end
+endfunction
+
+// -------- MONITOR --------
 always @(posedge clk) begin
-    $display("T=%0t | State=%0d | Time=%0d | WV=%b MW=%b MS=%b DP=%b DL=%b BZ=%b",
+    $display("T=%0t | %-8s | T_rem=%3d | WV=%b MW=%b MS=%b DP=%b DL=%b BZ=%b",
         $time,
-        dut.state,
+        get_state_name(dut.state),
         time_remaining,
         water_valve,
         motor_wash,
@@ -51,10 +69,10 @@ always @(posedge clk) begin
     );
 end
 
-initial begin
+// -------- TEST SEQUENCE --------
+integer i;
 
-    $dumpfile("wave.vcd");
-    $dumpvars(0, tb_top_controller);
+initial begin
 
     clk = 0;
     reset = 1;
@@ -62,56 +80,40 @@ initial begin
     pause = 0;
     mode = 0;
 
-    // Reset
-    #20 reset = 0;
+    $display("\n==== STARTING SIMULATION ====");
 
-    // =========================
-    // TEST 1: NORMAL MODE (Full Cycle)
-    // =========================
-    mode = 4'd0;   // NORMAL
-    #10 start = 1;
-    #10 start = 0;
+    // Reset pulse
+    #10 reset = 0;
 
-    // Let full cycle complete
-    #1500;
+    // Test multiple modes
+    for (i = 0; i <= 4; i = i + 1) begin
 
-    // =========================
-    // TEST 2: QUICK WASH
-    // =========================
-    mode = 4'd1;
-    #20 start = 1;
-    #10 start = 0;
+        mode = i;
+        $display("\n==== MODE = %0d ====", mode);
 
-    #1000;
+        // Start pulse
+        #10 start = 1;
+        #10 start = 0;
 
-    // =========================
-    // TEST 3: SUPER CLEAN (with PRESOAK)
-    // =========================
-    mode = 4'd2;
-    #20 start = 1;
-    #10 start = 0;
+        // Let it run
+        #300;
 
-    #2000;
+        // Pause test
+        $display("---- PAUSE ----");
+        pause = 1;
+        #50;
 
-    // =========================
-    // TEST 4: DRAIN + SPIN
-    // =========================
-    mode = 4'd6;
-    #20 start = 1;
-    #10 start = 0;
+        // Resume
+        $display("---- RESUME ----");
+        pause = 0;
 
-    #600;
+        #300;
 
-    // =========================
-    // TEST 5: RINSE + SPIN
-    // =========================
-    mode = 4'd7;
-    #20 start = 1;
-    #10 start = 0;
+    end
 
-    #800;
-
+    $display("\n==== END SIMULATION ====");
     $finish;
+
 end
 
 endmodule
