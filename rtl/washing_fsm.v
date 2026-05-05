@@ -113,7 +113,7 @@ end
 always @(*) begin
 
     load_timer = 0;
-    enable_timer = 1;
+    enable_timer = (state != IDLE) && !pause;
 
     if (state != next_state)
         load_timer = 1;
