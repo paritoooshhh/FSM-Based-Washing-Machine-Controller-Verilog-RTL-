@@ -1,7 +1,7 @@
 module mode_timer_lookup(
 
-    input [3:0] mode,
-    input [2:0] state,
+    input  [3:0] mode,
+    input  [2:0] state,
 
     output reg [9:0] time_value
 
@@ -28,7 +28,6 @@ parameter TUB_CLEAN     = 4'd8;
 parameter ECO_TUB_CLEAN = 4'd9;
 parameter PRESOAK_WASH  = 4'd10;
 
-
 always @(*) begin
 
     time_value = 10'd0;
@@ -37,132 +36,123 @@ always @(*) begin
 
         NORMAL: begin
             case(state)
-                FILL:   time_value = 10;
-                WASH:   time_value = 30;
-                DRAIN:  time_value = 4;
-                RINSE1: time_value = 10;
-                SPIN:   time_value = 12;
-
-                default: time_value = 10'd0;
+                FILL:   time_value = 10'd10;
+                WASH:   time_value = 10'd30;
+                DRAIN:  time_value = 10'd4;
+                RINSE1: time_value = 10'd10;
+                SPIN:   time_value = 10'd12;
+                default: ;
             endcase
         end
 
         QUICK_WASH: begin
             case(state)
-                FILL:   time_value = 6;
-                WASH:   time_value = 14;
-                DRAIN:  time_value = 4;
-                RINSE1: time_value = 6;
-                SPIN:   time_value = 8;
-
-                default: time_value = 10'd0;
+                FILL:   time_value = 10'd6;
+                WASH:   time_value = 10'd14;
+                DRAIN:  time_value = 10'd4;
+                RINSE1: time_value = 10'd6;
+                SPIN:   time_value = 10'd8;
+                default: ;
             endcase
         end
 
         SUPER_CLEAN: begin
             case(state)
-                FILL:    time_value = 12;
-                PRESOAK: time_value = 20;
-                WASH:    time_value = 40;
-                DRAIN:   time_value = 6;
-                RINSE1:  time_value = 14;
-                SPIN:    time_value = 16;
-
-                default: time_value = 10'd0;
+                FILL:    time_value = 10'd12;
+                PRESOAK: time_value = 10'd20;
+                WASH:    time_value = 10'd40;
+                DRAIN:   time_value = 10'd6;
+                RINSE1:  time_value = 10'd14;
+                SPIN:    time_value = 10'd16;
+                default: ;
             endcase
         end
 
         DELICATES: begin
             case(state)
-                FILL:   time_value = 8;
-                WASH:   time_value = 14;
-                DRAIN:  time_value = 4;
-                RINSE1: time_value = 8;
-                SPIN:   time_value = 5;
-
-                default: time_value = 10'd0;
+                FILL:   time_value = 10'd8;
+                WASH:   time_value = 10'd14;
+                DRAIN:  time_value = 10'd4;
+                RINSE1: time_value = 10'd8;
+                SPIN:   time_value = 10'd5;
+                default: ;
             endcase
         end
 
         BEDSHEET: begin
             case(state)
-                FILL:    time_value = 12;
-                PRESOAK: time_value = 18;
-                WASH:    time_value = 30;
-                DRAIN:   time_value = 6;
-                RINSE1:  time_value = 12;
-                SPIN:    time_value = 12;
-
-                default: time_value = 10'd0;
+                FILL:    time_value = 10'd12;
+                PRESOAK: time_value = 10'd18;
+                WASH:    time_value = 10'd30;
+                DRAIN:   time_value = 10'd6;
+                RINSE1:  time_value = 10'd12;
+                SPIN:    time_value = 10'd12;
+                default: ;
             endcase
         end
-  
+
         JEANS: begin
             case(state)
-                FILL:    time_value = 10;
-                PRESOAK: time_value = 16;
-                WASH:    time_value = 32;
-                DRAIN:   time_value = 6;
-                RINSE1:  time_value = 12;
-                SPIN:    time_value = 14;
-
-                default: time_value = 10'd0;
+                FILL:    time_value = 10'd10;
+                PRESOAK: time_value = 10'd16;
+                WASH:    time_value = 10'd32;
+                DRAIN:   time_value = 10'd6;
+                RINSE1:  time_value = 10'd12;
+                SPIN:    time_value = 10'd14;
+                default: ;
             endcase
         end
 
         DRAIN_SPIN: begin
             case(state)
-                DRAIN: time_value = 6;
-                SPIN:  time_value = 10;
-
-                default: time_value = 10'd0;
+                DRAIN: time_value = 10'd6;
+                SPIN:  time_value = 10'd10;
+                default: ;
             endcase
         end
 
         RINSE_SPIN: begin
             case(state)
-                FILL:   time_value = 8;
-                RINSE1: time_value = 10;
-                SPIN:   time_value = 10;
-
-                default: time_value = 10'd0;
+                FILL:   time_value = 10'd8;
+                RINSE1: time_value = 10'd10;
+                SPIN:   time_value = 10'd10;
+                default: ;
             endcase
         end
 
         TUB_CLEAN: begin
             case(state)
-                FILL:   time_value = 10;
-                WASH:   time_value = 40;
-                DRAIN:  time_value = 6;
-                RINSE1: time_value = 12;
-                SPIN:   time_value = 10;
-
-                default: time_value = 10'd0;
+                FILL:   time_value = 10'd10;
+                WASH:   time_value = 10'd40;
+                DRAIN:  time_value = 10'd6;
+                RINSE1: time_value = 10'd12;
+                SPIN:   time_value = 10'd10;
+                default: ;
             endcase
         end
 
         ECO_TUB_CLEAN: begin
             case(state)
-                FILL:  time_value = 10;
-                WASH:  time_value = 50;
-                DRAIN: time_value = 6;
-
-                default: time_value = 10'd0;
+                FILL:  time_value = 10'd10;
+                WASH:  time_value = 10'd50;
+                DRAIN: time_value = 10'd6;
+                default: ;
             endcase
         end
 
         PRESOAK_WASH: begin
             case(state)
-                FILL:    time_value = 10;
-                PRESOAK: time_value = 20;
-                WASH:    time_value = 24;
-                DRAIN:   time_value = 6;
-                RINSE1:  time_value = 10;
-                SPIN:    time_value = 10;
-
-                default: time_value = 10'd0;
+                FILL:    time_value = 10'd10;
+                PRESOAK: time_value = 10'd20;
+                WASH:    time_value = 10'd24;
+                DRAIN:   time_value = 10'd6;
+                RINSE1:  time_value = 10'd10;
+                SPIN:    time_value = 10'd10;
+                default: ;
             endcase
         end
+
+        default: time_value = 10'd0;
 
     endcase
 
