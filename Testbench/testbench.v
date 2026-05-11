@@ -16,7 +16,6 @@ wire drain_pump;
 wire door_lock;
 wire buzzer;
 
-// DUT
 top_controller dut(
     .clk(clk),
     .reset(reset),
@@ -33,10 +32,8 @@ top_controller dut(
     .buzzer(buzzer)
 );
 
-// CLOCK (10ns period)
 always #5 clk = ~clk;
 
-// -------- STATE NAME FUNCTION --------
 function [8*10:1] get_state_name;
     input [2:0] state;
     begin
@@ -54,7 +51,6 @@ function [8*10:1] get_state_name;
     end
 endfunction
 
-// -------- MONITOR --------
 always @(posedge clk) begin
     $display("T=%0t | %-8s | T_rem=%3d | WV=%b MW=%b MS=%b DP=%b DL=%b BZ=%b",
         $time,
@@ -69,7 +65,6 @@ always @(posedge clk) begin
     );
 end
 
-// -------- TEST SEQUENCE --------
 integer i;
 
 initial begin
@@ -82,28 +77,22 @@ initial begin
 
     $display("\n==== STARTING SIMULATION ====");
 
-    // Reset pulse
     #10 reset = 0;
 
-    // Test multiple modes
     for (i = 0; i <= 4; i = i + 1) begin
 
         mode = i;
         $display("\n==== MODE = %0d ====", mode);
 
-        // Start pulse
         #10 start = 1;
         #10 start = 0;
 
-        // Let it run
         #300;
 
-        // Pause test
         $display("---- PAUSE ----");
         pause = 1;
         #50;
 
-        // Resume
         $display("---- RESUME ----");
         pause = 0;
 
